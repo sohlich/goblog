@@ -5,31 +5,39 @@ import(
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2/bson"
+	"github.com/sohlich/goblog/repository"
+	"html/template"
 )
-	
-var postRepository , err = CreatePostRepository();
 
 //Route handlers
 func Index(w http.ResponseWriter, r *http.Request) {
-	jsonEncoder := json.NewEncoder(w)
 	log.Print("Accessing Index page")
-	var collection []Post
-	postRepository.PostCollection.Find(bson.M{}).Limit(3).All(&collection)
+	jsonEncoder := json.NewEncoder(w)
+	collection := repository.PostRepository().FindAllSortByDate(3)
 	jsonEncoder.Encode(collection)
 }
 
 func InsertPost(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
-	var input Post
+	var input repository.Post
 	decoder.Decode(&input)
-	postRepository.Add(&input)
+	repository.PostRepository().Add(&input)
 }
+
+func InsertPostForm(w http.ResponseWriter, req *http.Request) {
+	generatedTemplate, err := template.ParseFiles("templates/postform.html")
+	if err != nil{return}
+	generatedTemplate.Execute(w,nil)
+}
+
 
 func GetPost(w http.ResponseWriter, r *http.Request){
 	encoder := json.NewEncoder(w)
 	variables := mux.Vars(r)
 	permalink := variables["permalink"]
-	result :=  postRepository.FindByPermalink(permalink)
+	result :=  repository.PostRepository().FindByPermalink(permalink)
 	encoder.Encode(result)
 }
+
+
+	
