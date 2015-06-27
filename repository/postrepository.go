@@ -7,10 +7,7 @@ import(
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	)
-	
-	
-
-	
+		
 type postRepository struct {
 	 MongoSession *mgo.Session
 	 PostCollection *mgo.Collection
@@ -55,7 +52,7 @@ func(repository *postRepository) FindByPermalink(permalink string) Post{
 
 func(repository *postRepository) FindAllSortByDate(limit int) []Post{
 	var result []Post
-	repository.PostCollection.Find(bson.M{}).Limit(3).All(&result)
+	repository.PostCollection.Find(bson.M{}).Sort("datetime").Limit(limit).All(&result)
 	return result
 }
 

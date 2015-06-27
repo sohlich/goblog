@@ -10,4 +10,5 @@ type Post struct {
 	Author   string
 	DateTime time.Time
 	Permalink string
+	Tags	[]string
 }

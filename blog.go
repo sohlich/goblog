@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	"github.com/sohlich/goblog/logic"
+	"github.com/sohlich/goblog/blog"
 	"github.com/sohlich/goblog/repository"
 )
 
