@@ -12,3 +12,11 @@ type Post struct {
 	Permalink string
 	Tags	[]string
 }
+
+
+type User struct{
+	Username string
+	Password string
+	Email string
+	SessionToken string
+}
