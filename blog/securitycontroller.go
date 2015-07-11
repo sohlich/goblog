@@ -12,20 +12,19 @@ import (
 
 //Route handlers
 func RegisterFormProcess(w http.ResponseWriter, req *http.Request) {
-	
 	user := &repository.User{
 		Password: req.FormValue("password"),
 		Username: req.FormValue("username"),
 		Email: req.FormValue("email"),
 	}
-
-	passwordBytes, err := bcrypt.GenerateFromPassword([]byte(user.Password),6)
-	
+	bCryptPasswordBytes, err := bcrypt.GenerateFromPassword([]byte(user.Password),6)
 	if err != nil {http.Error(w, http.StatusText(405), 405)}
+	user.Password = string(bCryptPasswordBytes)	
+	user, err = repository.UserRepository().Add(user)
 	
-	user.Password = string(passwordBytes)	
-	log.Println(user.Password)
-	repository.UserRepository().Add(user)
+	if err != nil {
+		http.Error(w, http.StatusText(405), 405)
+	}	
 }
 
 
@@ -51,32 +50,65 @@ func LoginFormProcess(w http.ResponseWriter, req *http.Request) {
 	if err != nil {http.Error(w, http.StatusText(405), 405)}
 	err = bcrypt.CompareHashAndPassword([]byte (databaseUser.Password),[]byte (formPassword))
 	if err != nil {
-		log.Fatal("Wrong password")
+		log.Println("Wrong password")
 		notAuthenticatedRedirect(w,req)
 	}else{
 		token, err := security.CreateUserToken(databaseUser)
 		if err != nil {http.Error(w, http.StatusText(405), 405)}
 		w.Header().Set("X-AUTH",token)
+		authCookie := &http.Cookie{Name:"X-AUTH",
+								  Value:token,
+								  Path:"/"}
+		http.SetCookie(w,authCookie)
 		http.Redirect(w, req,"/", 302)
 	}
 }
+
+func Logout(w http.ResponseWriter, req *http.Request){
+	authCookie := &http.Cookie{Name:"X-AUTH",
+								  Value:"",
+								  Path:"/"}
+	http.SetCookie(w,authCookie)
+	http.Redirect(w, req,"/login", 302)
+}
+
 
 //Security interceptor for pre-request and post-request operations
 func HttpSecurityInterceptor(router http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		
-        log.Print("Pre-request log")
-        router.ServeHTTP(w, req)
-        
-		switch req.Method {
-        case "GET":
+		path := req.URL.Path
 		
-        case "POST":
-            // here we might use http.StatusCreated
-        }
-
+        log.Print("Pre-request log")
+		log.Print(path)
+		log.Println(req.Header.Get("X-AUTH"))
+		
+		user, err := getAuthenticatedUser(req)
+			
+		needAuthentication := path!="/login" && path !="/register"
+			
+		if err != nil && needAuthentication {
+			http.Redirect(w,req,"/login",302)
+			return
+		}
+		security.SetSecurityContext(req,user)
+        router.ServeHTTP(w, req)
     })
 }
+
+//Check if request is authenticated
+func getAuthenticatedUser(request *http.Request) (* repository.User,error){
+	authCookie, err := request.Cookie("X-AUTH");
+	var user *repository.User
+	if err == nil{
+		user, err = security.ParseUserToken(authCookie.Value)
+	}
+	return user,err
+}
+
+
+
+
 
 //Default redirect if user not authenticated
 func notAuthenticatedRedirect(w http.ResponseWriter, req *http.Request){

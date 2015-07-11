@@ -59,4 +59,10 @@ func(repository *userRepository) FindByUsername(username string) (*User, error){
 
 
 
+func (repository *userRepository) Close() {
+	repository.MongoSession.Close()
+}
+
+
+
 

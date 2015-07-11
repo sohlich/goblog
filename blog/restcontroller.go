@@ -47,6 +47,10 @@ func InsertPostForm(w http.ResponseWriter, req *http.Request) {
 	generatedTemplate.Execute(w,nil)
 }
 
+func AdminInterface(w http.ResponseWriter, r *http.Request){
+	
+}
+
 
 func GetPost(w http.ResponseWriter, r *http.Request){
 	encoder := json.NewEncoder(w)

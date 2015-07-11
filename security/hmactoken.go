@@ -1,6 +1,7 @@
 package security
 
 import(
+	"errors"
 	"bytes"
 	"strings"
 	"crypto/hmac"
@@ -9,6 +10,8 @@ import(
 	"encoding/json"
 	"github.com/sohlich/goblog/repository"
 )
+
+const Principal = "Principal"
 
 var appSecret = "secret"
 var separator = "."
@@ -43,6 +46,8 @@ func ParseUserToken(token string)(*repository.User,error){
 	
 	//Split token
 	tokenPart := strings.Split(token,separator)
+	
+	if len(tokenPart) < 2 {return nil, errors.New("Malformed auth token")}
 	
 	//Decode token parts
 	userBytes,err:= DecodeBase64(tokenPart[0]);
