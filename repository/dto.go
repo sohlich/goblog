@@ -1,23 +1,22 @@
 package repository
 
-import(
+import (
 	"time"
 )
 
 type Post struct {
-	Title    string
-	Content  string
-	Author   string
-	DateTime time.Time
+	Title     string
+	Content   string
+	Author    string
+	DateTime  time.Time
 	Permalink string
-	Tags	[]string
+	Tags      []string
 }
 
-
-type User struct{
-	Username string
-	Password string
-	Email string
+type User struct {
+	Username     string
+	Password     string
+	Email        string
 	SessionToken string
-	Role []string
+	Role         []string
 }

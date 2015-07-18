@@ -1,24 +1,22 @@
 package repository
-	
-import(
-	"log"
+
+import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	)
-	
-	
+	"log"
+)
+
 type userRepository struct {
-	 MongoSession *mgo.Session
-	 UserCollection *mgo.Collection
+	MongoSession   *mgo.Session
+	UserCollection *mgo.Collection
 }
 
 var userRepositoryInstance *userRepository = nil
 
-
-func UserRepository() (*userRepository) {
-	if(userRepositoryInstance == nil){	
+func UserRepository() *userRepository {
+	if userRepositoryInstance == nil {
 		userRepositoryInstance = new(userRepository)
-		var session, err = mgo.Dial("localhost")
+		var session, err = MongoSession()
 		if err != nil {
 			log.Fatal("Cant initialize repository")
 			return userRepositoryInstance
@@ -29,40 +27,29 @@ func UserRepository() (*userRepository) {
 	return userRepositoryInstance
 }
 
-
-func(repository *userRepository) Add(user *User) (*User, error){
+func (repository *userRepository) Add(user *User) (*User, error) {
 	err := userRepositoryInstance.UserCollection.Insert(user)
-	if(err != nil){
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
-	return user,nil
+	return user, nil
 }
 
-func(repository *userRepository) FindByUsernameAndPassword(username,password string) (*User, error){
+func (repository *userRepository) FindByUsernameAndPassword(username, password string) (*User, error) {
 	var user User
 	err := userRepositoryInstance.UserCollection.Find(bson.M{"username": username, "password": password}).One(&user)
-	if(err != nil){
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
-	return &user,nil
+	return &user, nil
 }
 
-func(repository *userRepository) FindByUsername(username string) (*User, error){
+func (repository *userRepository) FindByUsername(username string) (*User, error) {
 	var user User
 	err := userRepositoryInstance.UserCollection.Find(bson.M{"username": username}).One(&user)
-	if(err != nil){
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 	log.Println(user)
-	return &user,nil
+	return &user, nil
 }
-
-
-
-func (repository *userRepository) Close() {
-	repository.MongoSession.Close()
-}
-
-
-
-

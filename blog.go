@@ -27,8 +27,10 @@ func main() {
 	router.HandleFunc("/logout", blog.Logout).Methods("GET")
 	router.HandleFunc("/new", blog.InsertPost).Methods("POST")
 	router.HandleFunc("/new", blog.InsertPostForm).Methods("GET")
-	router.HandleFunc("/", blog.Index).Methods("GET")
 	router.HandleFunc("/admin", blog.AdminInterface).Methods("GET")
+	router.PathPrefix("/css").Handler(http.FileServer(http.Dir("./static")))
+	router.PathPrefix("/js").Handler(http.FileServer(http.Dir("./static")))
+	router.HandleFunc("/", blog.Index).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", nil)) //http handler handles request first
 }
 
@@ -38,6 +40,5 @@ func Init() {
 }
 
 func cleanUp() {
-	repository.UserRepository().Close()
-	repository.PostRepository().Close()
+	repository.CloseMongoSession()
 }

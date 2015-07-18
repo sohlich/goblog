@@ -7,6 +7,7 @@ import (
 	"github.com/sohlich/goblog/repository"
 	"github.com/sohlich/goblog/security"
 	"golang.org/x/crypto/bcrypt"
+	"strings"
 )
 
 
@@ -85,7 +86,9 @@ func HttpSecurityInterceptor(router http.Handler) http.Handler {
 		
 		user, err := getAuthenticatedUser(req)
 			
-		needAuthentication := path!="/login" && path !="/register"
+		needAuthentication := path!="/login" && path !="/register" && 
+		path !="/" && !strings.Contains(path,"/css") && 
+		!strings.Contains(path,"/js")
 			
 		if err != nil && needAuthentication {
 			http.Redirect(w,req,"/login",302)

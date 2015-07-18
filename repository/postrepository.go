@@ -2,11 +2,10 @@ package repository
 
 import (
 	"fmt"
-	"log"
-	"time"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
+	"time"
 )
 
 type postRepository struct {
@@ -20,7 +19,7 @@ var postRepositoryInstance *postRepository = nil
 func PostRepository() *postRepository {
 	if postRepositoryInstance == nil {
 		postRepositoryInstance = new(postRepository)
-		session, err := mgo.Dial("localhost")
+		session, err := MongoSession()
 		if err != nil {
 			log.Fatal("Cant connect to database")
 			return postRepositoryInstance
@@ -53,8 +52,4 @@ func (repository *postRepository) FindAllSortByDate(limit int) []Post {
 	var result []Post
 	repository.PostCollection.Find(bson.M{}).Sort("datetime").Limit(limit).All(&result)
 	return result
-}
-
-func (repository *postRepository) Close() {
-	repository.MongoSession.Close()
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="../js/jquery.min.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/bootstrap.min.js"></script>
+	<script src="../js/dropdown.js"></script>	
+    <title></title>
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand">GoBlog</a>
+            </div>
+
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a>Articles</a>
+                    </li>
+                </ul>
+				<ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" id="userMenu" aria-haspopup="true" 
+				aria-expanded="false">
+				User<span class="caret"></span>
+			  </a>
+              <ul class="dropdown-menu" aria-labelledby="userMenu">
+                <li>Open Sandbox</li>
+              </ul>
+            </li>
+          </ul>
+            </div>
+			
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header" id="banner">
+            <div class="row">
+                <div class="col-lg-8 col-md-7 col-sm-6">
+                    <h1>{{.Title}}</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="bs-docs-section clearfix">
+				<p>{{.Content}}</p>
+        </div>
+    </div>
+</body>
+</html>

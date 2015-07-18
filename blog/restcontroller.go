@@ -1,7 +1,6 @@
 package blog
 
 import(
-	"encoding/json"
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
@@ -53,11 +52,12 @@ func AdminInterface(w http.ResponseWriter, r *http.Request){
 
 
 func GetPost(w http.ResponseWriter, r *http.Request){
-	encoder := json.NewEncoder(w)
 	variables := mux.Vars(r)
 	permalink := variables["permalink"]
 	result :=  repository.PostRepository().FindByPermalink(permalink)
-	encoder.Encode(result)
+	generatedTemplate, err := template.ParseFiles("templates/post.html")
+	if err != nil{log.Fatal("Cant process index template")}
+	generatedTemplate.Execute(w,result)
 }
 
 
