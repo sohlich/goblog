@@ -8,15 +8,31 @@
 </head>
 
 <body>
-    <div class="navbar navbar-default navbar-fixed-top">
+     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand">GoBlog</a>
+                <a class="navbar-brand" href="/">GoBlog</a>
             </div>
+
             <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-				<li><a>Articles</a></li>
-				</ul>
+                <ul class="nav navbar-nav"></ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" id=
+                        "userMenu">User<span class="caret"></span></a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/new">New article</a>
+                            </li>
+
+                            <li>
+                                <a href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

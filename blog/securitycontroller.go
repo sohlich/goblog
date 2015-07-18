@@ -86,9 +86,12 @@ func HttpSecurityInterceptor(router http.Handler) http.Handler {
 		
 		user, err := getAuthenticatedUser(req)
 			
-		needAuthentication := path!="/login" && path !="/register" && 
-		path !="/" && !strings.Contains(path,"/css") && 
-		!strings.Contains(path,"/js")
+//		needAuthentication := path!="/login" && path !="/register" && 
+//		path !="/" && !strings.Contains(path,"/css") && 
+//		!strings.Contains(path,"/js")
+
+		needAuthentication := strings.Contains(path,"/new") || 
+				strings.Contains(path,"/admin")
 			
 		if err != nil && needAuthentication {
 			http.Redirect(w,req,"/login",302)

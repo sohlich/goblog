@@ -1,9 +1,61 @@
+<!DOCTYPE html>
 <html>
-<h2>New Post</h2>
-<form method="POST" action="/new">
-<input type="text" name="title" />
-<input type="text" name="tags"/>
-<textarea name="content"></textarea>
-<button type="submit">Post</button>
-</form> 
+<head>
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <title></title>
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">GoBlog</a>
+            </div>
+
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav"></ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" id=
+                        "userMenu">User<span class="caret"></span></a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="/new">New article</a>
+                            </li>
+
+                            <li>
+                                <a href="/logout">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header" id="banner">
+            <div class="row">
+                <div class="col-lg-8 col-md-7 col-sm-6">
+                    <h1>New Article</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="bs-docs-section clearfix">
+            <form action="/new" method="post">
+                <input name="title" type="text"> <input name="tags" type=
+                "text"> 
+                <textarea name="content">
+</textarea> <button type="submit">Post</button>
+            </form>
+        </div>
+    </div>
+</body>
 </html>

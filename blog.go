@@ -6,9 +6,29 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sohlich/goblog/blog"
 	"github.com/sohlich/goblog/repository"
+	"code.google.com/p/gcfg"
 )
 
+const defaultConfig = `
+    [mongo]
+    port = 27017
+    host= localhost`
+
+
 var router *mux.Router
+
+type Config struct {
+    Port string
+	Host string
+}
+
+type configFile struct {
+    Mongo Config
+}
+
+
+
+
 
 //Main method launching server
 func main() {
@@ -35,6 +55,8 @@ func main() {
 }
 
 func Init() {
+	config := LoadConfiguration("application.conf")	
+	repository.SetupMongo(config.Host,config.Port)
 	repository.PostRepository()
 	repository.UserRepository()
 }
@@ -42,3 +64,17 @@ func Init() {
 func cleanUp() {
 	repository.CloseMongoSession()
 }
+
+
+func LoadConfiguration(cfgFile string) Config {
+    var err error
+    var cfg configFile
+    if cfgFile != "" {
+        err = gcfg.ReadFileInto(&cfg, cfgFile)
+    } else {
+        err = gcfg.ReadStringInto(&cfg, defaultConfig)
+    }
+	if err != nil {log.Panic(err)}
+    return cfg.Mongo
+}
+
